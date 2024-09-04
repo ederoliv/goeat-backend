@@ -1,6 +1,7 @@
 package com.example.goeat_api.controller;
 
 import com.example.goeat_api.DTO.ClientRequestDTO;
+import com.example.goeat_api.domain.Client;
 import com.example.goeat_api.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,13 @@ public class ClientController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerClient(@RequestBody ClientRequestDTO body){
+    public ResponseEntity<?> registerClient(@RequestBody Client client){
 
-
-
-        return ResponseEntity.ok("biruleibe");
+        try{
+            Client savedClient = clientService.registerClient(client);
+            return ResponseEntity.ok(savedClient);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

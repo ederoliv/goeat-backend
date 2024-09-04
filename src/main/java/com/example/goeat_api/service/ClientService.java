@@ -20,4 +20,13 @@ public class ClientService {
         Optional<Client> client = clientRepository.findByEmailAndPassword(email, password);
         return client.isPresent();
     }
+
+    public Client registerClient(Client client){
+        Optional<Client> existingByEmail = clientRepository.findByEmail(client.getEmail());
+
+        if(existingByEmail.isPresent()){
+            throw new IllegalArgumentException("Email já cadastrado");
+        }
+        return clientRepository.save(client);
+    }
 }
