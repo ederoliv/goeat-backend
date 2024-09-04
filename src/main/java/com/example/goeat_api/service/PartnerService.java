@@ -5,7 +5,6 @@ import com.example.goeat_api.repository.PartnerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -20,4 +19,16 @@ public class PartnerService {
         return partner.isPresent();
     }
 
+    public Partner registerPartner(Partner partner){
+        Optional<Partner> existingEmail = partnerRepository.findByEmail(partner.getEmail());
+        Optional<Partner> existingCnpj = partnerRepository.findByCnpj(partner.getCnpj());
+
+        if(existingEmail.isPresent()){
+            throw new IllegalArgumentException("Email já cadasrado");
+        }
+        if (existingCnpj.isPresent()){
+            throw new IllegalArgumentException("Cnpj já está cadastrado");
+        }
+        return partnerRepository.save(partner);
+    }
 }
