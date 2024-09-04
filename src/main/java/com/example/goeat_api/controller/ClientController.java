@@ -1,13 +1,11 @@
 package com.example.goeat_api.controller;
 
+import com.example.goeat_api.DTO.ClientRequestDTO;
 import com.example.goeat_api.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/clients")
@@ -26,5 +24,13 @@ public class ClientController {
         } else {
             return ResponseEntity.ok("Usuário incorreto ou inexistente!");
         }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerClient(@RequestBody ClientRequestDTO body){
+
+
+
+        return ResponseEntity.ok("biruleibe");
     }
 }
