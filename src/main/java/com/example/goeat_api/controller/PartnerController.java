@@ -26,6 +26,8 @@ public class PartnerController {
     @PostMapping("/register")
     public ResponseEntity<?> registerPartner(@RequestBody Partner partner){
 
+        System.out.println("bateu aqui");
+
         try{
             Partner savedPartner = partnerService.registerPartner(partner);
             return ResponseEntity.ok(savedPartner);
