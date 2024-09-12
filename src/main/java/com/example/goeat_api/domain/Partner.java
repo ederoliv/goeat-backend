@@ -18,6 +18,10 @@ public class Partner {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @OneToOne(mappedBy = "partner")
+    @PrimaryKeyJoinColumn()
+    private Menu menu;
+
     @Column(nullable = false)
     private String name;
 
