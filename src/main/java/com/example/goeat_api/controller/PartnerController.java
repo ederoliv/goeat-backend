@@ -1,5 +1,6 @@
 package com.example.goeat_api.controller;
 
+import com.example.goeat_api.DTO.PartnerLoginRequestDTO;
 import com.example.goeat_api.DTO.PartnerLoginResponseDTO;
 import com.example.goeat_api.domain.Partner;
 import com.example.goeat_api.service.PartnerService;
@@ -15,15 +16,21 @@ public class PartnerController {
     @Autowired
     PartnerService partnerService;
 
-    @GetMapping("/login")
-    public ResponseEntity<?> loginPartner(@RequestParam String email, @RequestParam String password){
-        boolean isRegistered = partnerService.loginPartner(email, password);
+    @PostMapping("/login")
+    public ResponseEntity<?> loginPartner(@RequestBody PartnerLoginRequestDTO request){
+        boolean isRegistered = partnerService.loginPartner(request.email(), request.password());
+
+        //só pra saber se a request tá chegando na api
+        System.out.println(request.email());
+        System.out.println(request.password());
+
         if(isRegistered){
 
-            String partnerName = partnerService.getPartnerName(email);//recupera o nome do Partner
-            String partnerUUID = partnerService.getPartnerUUID(email);//recupera o UUID do Partner
+            String partnerName = partnerService.getPartnerName(request.email());//recupera o nome do Partner
+            String partnerUUID = partnerService.getPartnerUUID(request.email());//recupera o UUID do Partner
 
             PartnerLoginResponseDTO partnerLoginResponseDTO = new PartnerLoginResponseDTO(partnerName, partnerUUID);
+
 
             return ResponseEntity.ok(partnerLoginResponseDTO);
 
