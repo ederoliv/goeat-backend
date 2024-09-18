@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +25,23 @@ public class PartnerService {
         Optional<Partner> existingCnpj = partnerRepository.findByCnpj(partner.getCnpj());
 
         if(existingEmail.isPresent()){
-            throw new IllegalArgumentException("Email já cadasrado");
+            throw new IllegalArgumentException("Email já cadastrado");
         }
         if (existingCnpj.isPresent()){
             throw new IllegalArgumentException("Cnpj já está cadastrado");
         }
         return partnerRepository.save(partner);
+    }
+
+    public String getPartnerName(String email){
+        Optional<Partner> partner = partnerRepository.findByEmail(email);
+
+        return partner.get().getName();
+    }
+
+    public String getPartnerUUID(String email){
+        Optional<Partner> partner = partnerRepository.findByEmail(email);
+
+        return partner.get().getId().toString();
     }
 }

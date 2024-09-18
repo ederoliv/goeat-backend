@@ -1,8 +1,10 @@
 package com.example.goeat_api.controller;
 
+import com.example.goeat_api.DTO.PartnerLoginResponseDTO;
 import com.example.goeat_api.domain.Partner;
 import com.example.goeat_api.service.PartnerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,19 +16,24 @@ public class PartnerController {
     PartnerService partnerService;
 
     @GetMapping("/login")
-    public ResponseEntity<String> loginPartner(@RequestParam String email, @RequestParam String password){
+    public ResponseEntity<?> loginPartner(@RequestParam String email, @RequestParam String password){
         boolean isRegistered = partnerService.loginPartner(email, password);
         if(isRegistered){
-            return ResponseEntity.ok("Parceiro logado!");
+
+            String partnerName = partnerService.getPartnerName(email);//recupera o nome do Partner
+            String partnerUUID = partnerService.getPartnerUUID(email);//recupera o UUID do Partner
+
+            PartnerLoginResponseDTO partnerLoginResponseDTO = new PartnerLoginResponseDTO(partnerName, partnerUUID);
+
+            return ResponseEntity.ok(partnerLoginResponseDTO);
+
         } else {
-            return ResponseEntity.ok("Parceiro incorreto ou inexistente!");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Parceiro incorreto ou inexistente!");
         }
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerPartner(@RequestBody Partner partner){
-
-        System.out.println("bateu aqui");
 
         try{
             Partner savedPartner = partnerService.registerPartner(partner);
