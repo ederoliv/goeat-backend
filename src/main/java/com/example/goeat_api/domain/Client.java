@@ -34,4 +34,6 @@ public class Client {
 
     @Column(nullable = false, name = "birth_date")
     private LocalDate birthDate;
+
+
 }

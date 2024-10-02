@@ -27,15 +27,8 @@ public class Product {
 
     private String imageUrl;
 
+    //muitos produtos podem pertencer a um mesmo menu
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "menu_id")
     private Menu menu;
-
-    /*
-    * category
-    * preparationTime
-    * menuId
-    * createdAt
-     */
-
 }

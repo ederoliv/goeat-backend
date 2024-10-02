@@ -20,17 +20,12 @@ public class PartnerController {
     public ResponseEntity<?> loginPartner(@RequestBody PartnerLoginRequestDTO request){
         boolean isRegistered = partnerService.loginPartner(request.email(), request.password());
 
-        //só pra saber se a request tá chegando na api
-        System.out.println(request.email());
-        System.out.println(request.password());
-
         if(isRegistered){
 
             String partnerName = partnerService.getPartnerName(request.email());//recupera o nome do Partner
             String partnerUUID = partnerService.getPartnerUUID(request.email());//recupera o UUID do Partner
 
             PartnerLoginResponseDTO partnerLoginResponseDTO = new PartnerLoginResponseDTO(partnerName, partnerUUID);
-
 
             return ResponseEntity.ok(partnerLoginResponseDTO);
 

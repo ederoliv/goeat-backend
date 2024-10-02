@@ -18,8 +18,9 @@ public class Partner {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne(mappedBy = "partner")
-    @PrimaryKeyJoinColumn()
+    //cada Partner terá um e somente um menu
+    @OneToOne(mappedBy = "partner", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Menu menu;
 
     @Column(nullable = false)

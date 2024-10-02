@@ -22,11 +22,27 @@ public class ClientService {
     }
 
     public Client registerClient(Client client){
-        Optional<Client> existingByEmail = clientRepository.findByEmail(client.getEmail());
+        Optional<Client> existingEmail = clientRepository.findByEmail(client.getEmail());
+        Optional<Client> existingCpf = clientRepository.findByCpf(client.getCpf());
 
-        if(existingByEmail.isPresent()){
+        if(existingEmail.isPresent()){
             throw new IllegalArgumentException("Email já cadastrado");
         }
+        if(existingCpf.isPresent()){
+            throw new IllegalArgumentException("Cpf ja cadastrado");
+        }
         return clientRepository.save(client);
+    }
+
+    public String getClientName(String email){
+        Optional<Client> client = clientRepository.findByEmail(email);
+
+        return client.get().getName();
+    }
+
+    public String getClientUUID(String email){
+        Optional<Client> client = clientRepository.findByEmail(email);
+
+        return client.get().getId().toString();
     }
 }

@@ -19,6 +19,7 @@ public class Menu {
     @Column(name = "partner_id")
     private UUID id;
 
+    //o menu pertence a um e somente um Partner
     @OneToOne
     @MapsId
     @JoinColumn(name = "partner_id")
@@ -26,7 +27,9 @@ public class Menu {
 
     private String description;
 
-    @OneToMany(mappedBy = "menu")
+
+    //um unico menu pode conter muitos produtos
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private List<Product> products;
 
 
