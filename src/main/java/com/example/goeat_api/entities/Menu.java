@@ -1,4 +1,4 @@
-package com.example.goeat_api.domain;
+package com.example.goeat_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -31,8 +31,7 @@ public class Menu {
 
     //um unico menu pode conter muitos produtos
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
-    //@JsonManagedReference
-    @JsonIgnoreProperties
+    @JsonManagedReference
     private List<Product> products;
 
 }

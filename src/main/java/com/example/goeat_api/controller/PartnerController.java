@@ -1,31 +1,33 @@
 package com.example.goeat_api.controller;
 
-import com.example.goeat_api.DTO.PartnerLoginRequestDTO;
-import com.example.goeat_api.DTO.PartnerLoginResponseDTO;
-import com.example.goeat_api.domain.Partner;
+import com.example.goeat_api.DTO.partner.PartnerLoginRequestDTO;
+import com.example.goeat_api.DTO.partner.PartnerLoginResponseDTO;
+import com.example.goeat_api.entities.Partner;
 import com.example.goeat_api.service.PartnerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/partners")
+@RequiredArgsConstructor
+@Slf4j
+@RequestMapping("api/v1/partners")
 public class PartnerController {
 
-    @Autowired
-    PartnerService partnerService;
+
+    private final PartnerService partnerService;
+
 
     @PostMapping("/login")
     public ResponseEntity<?> loginPartner(@RequestBody PartnerLoginRequestDTO request){
-        boolean isRegistered = partnerService.loginPartner(request.email(), request.password());
+        Optional<Partner> partner = partnerService.loginPartner(request);
 
-        if(isRegistered){
+        if(partner.isPresent()){
 
-            String partnerName = partnerService.getPartnerName(request.email());//recupera o nome do Partner
-            String partnerUUID = partnerService.getPartnerUUID(request.email());//recupera o UUID do Partner
-
-            PartnerLoginResponseDTO partnerLoginResponseDTO = new PartnerLoginResponseDTO(partnerName, partnerUUID);
+            PartnerLoginResponseDTO partnerLoginResponseDTO = new PartnerLoginResponseDTO(partner.get().getName(), partner.get().getId());
 
             return ResponseEntity.ok(partnerLoginResponseDTO);
 

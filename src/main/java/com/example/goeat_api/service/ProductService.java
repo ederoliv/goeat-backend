@@ -1,6 +1,6 @@
 package com.example.goeat_api.service;
 
-import com.example.goeat_api.domain.Product;
+import com.example.goeat_api.entities.Product;
 import com.example.goeat_api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

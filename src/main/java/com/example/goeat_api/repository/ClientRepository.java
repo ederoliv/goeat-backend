@@ -1,6 +1,6 @@
 package com.example.goeat_api.repository;
 
-import com.example.goeat_api.domain.Client;
+import com.example.goeat_api.entities.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

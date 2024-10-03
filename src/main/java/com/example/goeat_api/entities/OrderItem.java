@@ -1,4 +1,4 @@
-package com.example.goeat_api.domain;
+package com.example.goeat_api.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

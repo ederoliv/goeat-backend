@@ -1,38 +1,33 @@
 package com.example.goeat_api.controller;
 
-import com.example.goeat_api.DTO.ClientLoginRequestDTO;
-import com.example.goeat_api.DTO.ClientLoginResponseDTO;
-import com.example.goeat_api.domain.Client;
+import com.example.goeat_api.DTO.client.ClientLoginRequestDTO;
+import com.example.goeat_api.DTO.client.ClientLoginResponseDTO;
+import com.example.goeat_api.entities.Client;
 import com.example.goeat_api.service.ClientService;
-import com.example.goeat_api.service.PartnerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/clients")
+@RequiredArgsConstructor
+@Slf4j
+@RequestMapping("api/v1/clients")
 public class ClientController {
 
 
-    private final PartnerService partnerService;
-    @Autowired
-    ClientService clientService;
+    private final ClientService clientService;
 
-    public ClientController(PartnerService partnerService) {
-        this.partnerService = partnerService;
-    }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginClient(@RequestBody ClientLoginRequestDTO request) {
-        boolean isRegistered = clientService.loginClient(request.email(), request.password());
+        Optional<Client> client = clientService.loginClient(request);
 
-        if(isRegistered) {
+        if(client.isPresent()) {
 
-            String clientName = clientService.getClientName(request.email());
-            String clientUUID = clientService.getClientUUID(request.email());
-
-            ClientLoginResponseDTO clientLoginResponseDTO = new ClientLoginResponseDTO(clientName, clientUUID);
+            ClientLoginResponseDTO clientLoginResponseDTO = new ClientLoginResponseDTO(client.get().getName(), client.get().getId());
 
             return ResponseEntity.ok(clientLoginResponseDTO);
 

@@ -1,9 +1,9 @@
 package com.example.goeat_api.service;
 
-import com.example.goeat_api.domain.Client;
+import com.example.goeat_api.DTO.client.ClientLoginRequestDTO;
+import com.example.goeat_api.entities.Client;
 import com.example.goeat_api.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,13 +12,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ClientService {
 
-    @Autowired
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
 
-    public boolean loginClient(String email, String password){
-        Optional<Client> client = clientRepository.findByEmailAndPassword(email, password);
-        return client.isPresent();
+    public Optional<Client> loginClient(ClientLoginRequestDTO request){
+        Optional<Client> client = clientRepository.findByEmailAndPassword(request.email(), request.password());
+         if (client.isPresent()){
+             return client;
+         } else {
+             return Optional.empty();
+         }
     }
 
     public Client registerClient(Client client){

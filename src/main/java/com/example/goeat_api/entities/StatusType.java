@@ -1,4 +1,4 @@
-package com.example.goeat_api.domain;
+package com.example.goeat_api.entities;
 
 public enum StatusType {
 

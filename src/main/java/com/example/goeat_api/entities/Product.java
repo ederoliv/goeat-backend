@@ -1,4 +1,4 @@
-package com.example.goeat_api.domain;
+package com.example.goeat_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -31,7 +31,6 @@ public class Product {
     //muitos produtos podem pertencer a um mesmo menu
     @ManyToOne
     @JoinColumn(name = "menu_id")
-    //@JsonBackReference
     @JsonBackReference
     private Menu menu;
 }
