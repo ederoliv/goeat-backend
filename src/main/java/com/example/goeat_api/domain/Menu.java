@@ -1,5 +1,7 @@
 package com.example.goeat_api.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,10 +29,10 @@ public class Menu {
 
     private String description;
 
-
     //um unico menu pode conter muitos produtos
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+    //@JsonManagedReference
+    @JsonIgnoreProperties
     private List<Product> products;
-
 
 }

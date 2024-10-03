@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +29,8 @@ public class ProductService {
     }
 
     public List<Product> listAllProducts(){
-
-        return productRepository.findAll();
+        List<Product> products = productRepository.findAll();
+        return products;
     }
 
     public Product registerProduct(Product product){
@@ -41,5 +42,8 @@ public class ProductService {
             return productRepository.save(product);
         }
     }
-}
 
+    public Optional<List<Product>> listAllProductsByMenuId(UUID menuId){
+        return productRepository.findProductsByMenuId(menuId);
+    }
+}

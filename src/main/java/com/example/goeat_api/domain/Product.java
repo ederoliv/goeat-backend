@@ -1,5 +1,6 @@
 package com.example.goeat_api.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,5 +31,7 @@ public class Product {
     //muitos produtos podem pertencer a um mesmo menu
     @ManyToOne
     @JoinColumn(name = "menu_id")
+    //@JsonBackReference
+    @JsonBackReference
     private Menu menu;
 }
