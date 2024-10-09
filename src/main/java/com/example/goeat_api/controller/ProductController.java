@@ -1,7 +1,5 @@
 package com.example.goeat_api.controller;
 
-import com.example.goeat_api.DTO.product.ProductByMenuIdRequestDTO;
-import com.example.goeat_api.DTO.product.ProductsResponseDTO;
 import com.example.goeat_api.entities.Product;
 import com.example.goeat_api.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +27,18 @@ public class ProductController {
     public ResponseEntity<?> listAllProductsByMenuId(@PathVariable UUID id) {
 
         return ResponseEntity.status(HttpStatus.OK).body(productService.listAllProductsByMenuId(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> registerProduct(@RequestBody Product request){
+
+        try {
+            Product savedProduct = productService.registerProduct(request);
+            return ResponseEntity.ok(savedProduct);
+        } catch (IllegalArgumentException e) {
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     @DeleteMapping("/{id}")
