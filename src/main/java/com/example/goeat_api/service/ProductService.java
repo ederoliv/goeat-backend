@@ -3,7 +3,7 @@ package com.example.goeat_api.service;
 import com.example.goeat_api.entities.Product;
 import com.example.goeat_api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +13,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public String searchProduct(String name){
         Optional<Product> existingProduct = productRepository.findByName(name);
@@ -29,8 +27,7 @@ public class ProductService {
     }
 
     public List<Product> listAllProducts(){
-        List<Product> products = productRepository.findAll();
-        return products;
+        return productRepository.findAll();
     }
 
     public Product registerProduct(Product product){
@@ -50,11 +47,7 @@ public class ProductService {
 
         Optional<Product> existingProduct = productRepository.findById(id);
 
-        if (!existingProduct.isPresent()){
-            return true;
-        } else {
-            return false;
-        }
+        return existingProduct.isEmpty();
     }
 
     public Optional<List<Product>> listAllProductsByMenuId(UUID menuId){
