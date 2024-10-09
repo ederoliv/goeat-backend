@@ -7,14 +7,10 @@ import com.example.goeat_api.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,6 +29,20 @@ public class ProductController {
     public ResponseEntity<?> listAllProductsByMenuId(@PathVariable UUID id) {
 
         return ResponseEntity.status(HttpStatus.OK).body(productService.listAllProductsByMenuId(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProductById(@PathVariable UUID id) {
+
+        if(productService.deleteProduct(id)){
+
+            return ResponseEntity.ok().build();
+
+        } else {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
     }
 }
 

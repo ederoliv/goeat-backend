@@ -36,4 +36,6 @@ public class Partner {
     private String cnpj;
 
     private String phone;
+
 }
+

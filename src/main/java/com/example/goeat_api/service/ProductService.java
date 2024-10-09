@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,6 +41,20 @@ public class ProductService {
             throw new IllegalArgumentException("produto não existe!");
         } else {
             return productRepository.save(product);
+        }
+    }
+
+    public Boolean deleteProduct(UUID id){
+        Product product = productRepository.findById(id).get();
+
+        productRepository.delete(product);
+
+        Optional<Product> existingProduct = productRepository.findById(id);
+
+        if (!existingProduct.isPresent()){
+            return true;
+        } else {
+            return false;
         }
     }
 
