@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,6 +13,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     private final ProductRepository productRepository;
 
     public String searchProduct(String name){
@@ -27,18 +27,14 @@ public class ProductService {
         }
     }
 
-    public List<Product> listAllProducts(){
-        return productRepository.findAll();
+    public void registerProduct(Product product){
+
+            productRepository.save(product);
+
     }
 
-    public Product registerProduct(Product product){
-        Optional<Product> existingProduct = productRepository.findByName(product.getName());
-
-        if (existingProduct.isPresent()){
-            throw new IllegalArgumentException("produto não existe!");
-        } else {
-            return productRepository.save(product);
-        }
+    public List<Product> listAllProducts(){
+        return productRepository.findAll();
     }
 
     public Boolean deleteProduct(UUID id){
