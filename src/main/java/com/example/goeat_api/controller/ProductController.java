@@ -38,8 +38,6 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<?> registerProduct(@RequestBody ProductDTO productDTO) {
 
-        System.out.println(productDTO.menuId());
-
         try {
             Menu menu = menuService.findById(productDTO.menuId());
            
@@ -62,8 +60,6 @@ public class ProductController {
             }     else {
                 return ResponseEntity.notFound().build();
             }
-
-
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
