@@ -1,7 +1,9 @@
 package com.example.goeat_api.controller;
 
+import com.example.goeat_api.DTO.Order.OrderDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginRequestDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginResponseDTO;
+import com.example.goeat_api.entities.Order;
 import com.example.goeat_api.entities.Partner;
 import com.example.goeat_api.service.PartnerService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +35,7 @@ public class PartnerController {
             return ResponseEntity.ok(partnerLoginResponseDTO);
 
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Parceiro incorreto ou inexistente!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parceiro incorreto ou inexistente!");
         }
     }
 
@@ -45,5 +48,15 @@ public class PartnerController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("/{id}/orders")
+    public ResponseEntity<?> orderPartner(@PathVariable UUID id, @RequestBody OrderDTO orderDTO){
+
+
+        //implementação
+
+        return ResponseEntity.ok("success");
+
     }
 }

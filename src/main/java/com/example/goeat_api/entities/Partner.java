@@ -1,6 +1,7 @@
 package com.example.goeat_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,5 +43,8 @@ public class Partner {
     @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Support> supports;
-}
 
+    @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Order> orders;
+}

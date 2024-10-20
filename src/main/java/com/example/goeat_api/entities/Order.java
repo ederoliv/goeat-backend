@@ -22,6 +22,10 @@ public class Order {
     @JoinColumn(name = "client_id")
     private Client client;
 
+    @ManyToOne
+    @JoinColumn(name = "partner_id")
+    private Partner partner;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;
 
@@ -30,5 +34,5 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
-    private StatusType OrderStatus = StatusType.ESPERANDO;
+    private StatusType orderStatus = StatusType.ESPERANDO;
 }
