@@ -1,6 +1,7 @@
 package com.example.goeat_api.repository;
 
 import com.example.goeat_api.entities.Order;
+import com.example.goeat_api.entities.StatusType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

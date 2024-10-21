@@ -4,7 +4,6 @@ import com.example.goeat_api.DTO.Order.OrderDTO;
 import com.example.goeat_api.DTO.Order.OrderResponseDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginRequestDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginResponseDTO;
-import com.example.goeat_api.entities.Order;
 import com.example.goeat_api.entities.Partner;
 import com.example.goeat_api.service.OrderService;
 import com.example.goeat_api.service.PartnerService;

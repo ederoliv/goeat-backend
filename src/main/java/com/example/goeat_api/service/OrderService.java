@@ -6,6 +6,7 @@ import com.example.goeat_api.DTO.OrderItemDTO.OrderItemDTO;
 import com.example.goeat_api.entities.*;
 import com.example.goeat_api.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,11 +35,11 @@ public class OrderService {
     }
 
     public OrderResponseDTO createOrder(OrderDTO orderDTO, UUID partnerId) {
-        // 1. Buscar o cliente a partir do ID
+        // Verifica se o cliente existe
         Client client = clientRepository.findById(orderDTO.clientId())
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
-        // 2. Buscar o parceiro a partir do ID
+        // Verifica se o parceiro existe
         Partner partner = partnerRepository.findById(partnerId)
                 .orElseThrow(() -> new RuntimeException("Partner not found"));
 
@@ -73,15 +74,27 @@ public class OrderService {
         Order orderSaved = orderRepository.save(order);
 
         // 7. Monta o DTO de resposta
-        OrderResponseDTO orderResponseDTO = new OrderResponseDTO(
+
+        return new OrderResponseDTO(
                 orderSaved.getId(),
                 orderSaved.getOrderStatus(),
                 orderSaved.getTotalPrice(),
                 orderSaved.getClient().getId(),
                 orderSaved.getPartner().getId());
-
-        return orderResponseDTO;
     }
+
+    public OrderResponseDTO updateOrderStatus(Long orderId, String status) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        order.setOrderStatus(getOrderStatusType(status));
+
+        return toOrderResponseDTO(orderRepository.save(order));
+
+    }
+
+    // outros métodos....
 
     // Método para calcular o preço total
     private int calculateTotalPrice(List<OrderItem> orderItems) {
@@ -90,9 +103,6 @@ public class OrderService {
                 .sum();
     }
 
-
-
-
     public List<OrderResponseDTO> convertToOrderResponseDTO(Optional<List<Order>> optionalOrders) {
         return optionalOrders
                 .map(orders -> orders.stream()  // Se a lista de pedidos estiver presente, realiza o stream
@@ -100,7 +110,6 @@ public class OrderService {
                         .collect(Collectors.toList()))  // Coleta em uma lista de OrderResponseDTO
                 .orElse(Collections.emptyList());  // Caso o Optional esteja vazio, retorna uma lista vazia
     }
-
 
     private OrderResponseDTO toOrderResponseDTO(Order order) {
         OrderResponseDTO dto = new OrderResponseDTO(
@@ -113,4 +122,21 @@ public class OrderService {
         return dto;
     }
 
+    public StatusType getOrderStatusType(String status) {
+
+        StatusType newStatus = StatusType.ESPERANDO;
+
+        switch (status) {
+            case "ESPERANDO": newStatus = StatusType.ESPERANDO;
+            break;
+            case "PREPARANDO": newStatus = StatusType.PREPARANDO;
+            break;
+            case "ENCAMINHADOS": newStatus = StatusType.ENCAMINHADOS;
+            break;
+            case "FINALIZADOS": newStatus = StatusType.FINALIZADOS;
+            break;
+        }
+
+        return newStatus;
+    }
 }
