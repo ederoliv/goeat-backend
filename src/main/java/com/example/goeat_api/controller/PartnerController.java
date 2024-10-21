@@ -1,16 +1,20 @@
 package com.example.goeat_api.controller;
 
 import com.example.goeat_api.DTO.Order.OrderDTO;
+import com.example.goeat_api.DTO.Order.OrderResponseDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginRequestDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginResponseDTO;
 import com.example.goeat_api.entities.Order;
 import com.example.goeat_api.entities.Partner;
+import com.example.goeat_api.service.OrderService;
 import com.example.goeat_api.service.PartnerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,6 +26,8 @@ public class PartnerController {
 
 
     private final PartnerService partnerService;
+
+    private final OrderService orderService;
 
 
     @PostMapping("/login")
@@ -54,9 +60,16 @@ public class PartnerController {
     public ResponseEntity<?> orderPartner(@PathVariable UUID id, @RequestBody OrderDTO orderDTO){
 
 
-        //implementação
+        OrderResponseDTO responseDTO = orderService.createOrder(orderDTO, id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
-        return ResponseEntity.ok("success");
+    }
 
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<?> getOrderPartner(@PathVariable UUID id){
+
+        OrderResponseDTO response = orderService.getOrderByPartnerId(id);
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.goeat_api.service;
 
 import com.example.goeat_api.DTO.Order.OrderDTO;
+import com.example.goeat_api.DTO.Order.OrderResponseDTO;
 import com.example.goeat_api.DTO.OrderItemDTO.OrderItemDTO;
 import com.example.goeat_api.entities.*;
 import com.example.goeat_api.repository.*;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,7 +28,22 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
 
 
-    public Order createOrder(OrderDTO orderDTO, UUID partnerId) {
+    public OrderResponseDTO getOrderByPartnerId(UUID partnerId) {
+
+        Optional<Order> order = orderRepository.findByPartnerId(partnerId);
+
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO(
+                order.get().getId(),
+                order.get().getOrderStatus(),
+                order.get().getTotalPrice(),
+                order.get().getClient().getId(),
+                order.get().getPartner().getId()
+        );
+
+        return orderResponseDTO;
+    }
+
+    public OrderResponseDTO createOrder(OrderDTO orderDTO, UUID partnerId) {
         // 1. Buscar o cliente a partir do ID
         Client client = clientRepository.findById(orderDTO.clientId())
                 .orElseThrow(() -> new RuntimeException("Client not found"));
@@ -62,7 +79,19 @@ public class OrderService {
         // 6. Associar os itens ao pedido e atualizar o pedido
         order.setItems(orderItems);
         order.setTotalPrice(calculateTotalPrice(orderItems));  // Calcular o preço total
-        return orderRepository.save(order);
+
+        Order orderSaved = orderRepository.save(order);
+
+        // 7. Monta o DTO de resposta
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO(
+                orderSaved.getId(),
+                orderSaved.getOrderStatus(),
+                orderSaved.getTotalPrice(),
+                orderSaved.getClient().getId(),
+                orderSaved.getPartner().getId());
+
+
+        return orderResponseDTO;
     }
 
     // Método para calcular o preço total
