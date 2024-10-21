@@ -68,8 +68,8 @@ public class PartnerController {
     @GetMapping("/{id}/orders")
     public ResponseEntity<?> getOrderPartner(@PathVariable UUID id){
 
-        OrderResponseDTO response = orderService.getOrderByPartnerId(id);
+        List<OrderResponseDTO> responseDTOList = orderService.getAllOrdersByPartnerId(id);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(responseDTOList);
     }
 }

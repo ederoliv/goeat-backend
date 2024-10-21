@@ -8,10 +8,8 @@ import com.example.goeat_api.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,19 +26,11 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
 
 
-    public OrderResponseDTO getOrderByPartnerId(UUID partnerId) {
+    public List<OrderResponseDTO> getAllOrdersByPartnerId(UUID partnerId) {
 
-        Optional<Order> order = orderRepository.findByPartnerId(partnerId);
+        Optional<List<Order>> order = orderRepository.findByPartnerId(partnerId);
 
-        OrderResponseDTO orderResponseDTO = new OrderResponseDTO(
-                order.get().getId(),
-                order.get().getOrderStatus(),
-                order.get().getTotalPrice(),
-                order.get().getClient().getId(),
-                order.get().getPartner().getId()
-        );
-
-        return orderResponseDTO;
+        return convertToOrderResponseDTO(order);
     }
 
     public OrderResponseDTO createOrder(OrderDTO orderDTO, UUID partnerId) {
@@ -90,7 +80,6 @@ public class OrderService {
                 orderSaved.getClient().getId(),
                 orderSaved.getPartner().getId());
 
-
         return orderResponseDTO;
     }
 
@@ -100,4 +89,28 @@ public class OrderService {
                 .mapToInt(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum();
     }
+
+
+
+
+    public List<OrderResponseDTO> convertToOrderResponseDTO(Optional<List<Order>> optionalOrders) {
+        return optionalOrders
+                .map(orders -> orders.stream()  // Se a lista de pedidos estiver presente, realiza o stream
+                        .map(this::toOrderResponseDTO)  // Converte cada Order em OrderResponseDTO
+                        .collect(Collectors.toList()))  // Coleta em uma lista de OrderResponseDTO
+                .orElse(Collections.emptyList());  // Caso o Optional esteja vazio, retorna uma lista vazia
+    }
+
+
+    private OrderResponseDTO toOrderResponseDTO(Order order) {
+        OrderResponseDTO dto = new OrderResponseDTO(
+                order.getId(),
+                order.getOrderStatus(),
+                order.getTotalPrice(),
+                order.getClient().getId(),
+                order.getPartner().getId());
+
+        return dto;
+    }
+
 }
