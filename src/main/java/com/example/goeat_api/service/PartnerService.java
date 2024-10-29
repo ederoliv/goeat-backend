@@ -1,11 +1,15 @@
 package com.example.goeat_api.service;
 
 import com.example.goeat_api.DTO.partner.PartnerLoginRequestDTO;
+import com.example.goeat_api.DTO.partner.PartnerResponseDTO;
 import com.example.goeat_api.entities.Partner;
 import com.example.goeat_api.repository.PartnerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +17,16 @@ public class PartnerService {
 
 
     public final PartnerRepository partnerRepository;
+
+    public List<PartnerResponseDTO> listAllPartners() {
+
+        List<Partner> partners = partnerRepository.findAll();
+
+        return partners.stream()
+                .map(partner -> new PartnerResponseDTO(partner.getId(), partner.getName()))
+                .collect(Collectors.toList());
+
+    }
 
     public Optional<Partner> loginPartner(PartnerLoginRequestDTO request){
         Optional<Partner> partner = partnerRepository.findByEmailAndPassword(request.email(), request.password());

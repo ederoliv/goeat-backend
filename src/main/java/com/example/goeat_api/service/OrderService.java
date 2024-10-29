@@ -6,7 +6,6 @@ import com.example.goeat_api.DTO.OrderItemDTO.OrderItemDTO;
 import com.example.goeat_api.entities.*;
 import com.example.goeat_api.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

@@ -4,6 +4,7 @@ import com.example.goeat_api.DTO.Order.OrderDTO;
 import com.example.goeat_api.DTO.Order.OrderResponseDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginRequestDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginResponseDTO;
+import com.example.goeat_api.DTO.partner.PartnerResponseDTO;
 import com.example.goeat_api.entities.Partner;
 import com.example.goeat_api.service.OrderService;
 import com.example.goeat_api.service.PartnerService;
@@ -28,6 +29,13 @@ public class PartnerController {
 
     private final OrderService orderService;
 
+
+    @GetMapping("")
+    public ResponseEntity<List<PartnerResponseDTO>> getPartners() {
+
+        return ResponseEntity.ok(partnerService.listAllPartners());
+
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginPartner(@RequestBody PartnerLoginRequestDTO request){
