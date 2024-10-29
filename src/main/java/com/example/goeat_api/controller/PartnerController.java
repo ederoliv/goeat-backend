@@ -30,7 +30,7 @@ public class PartnerController {
     private final OrderService orderService;
 
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<PartnerResponseDTO>> getPartners() {
 
         return ResponseEntity.ok(partnerService.listAllPartners());
