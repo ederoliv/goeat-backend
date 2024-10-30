@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,6 +18,21 @@ public class PartnerService {
 
 
     public final PartnerRepository partnerRepository;
+
+    public PartnerResponseDTO getPartnerById(UUID partnerId) {
+
+        Optional<Partner> partner = partnerRepository.findById(partnerId);
+
+        if(partner.isPresent()) {
+
+            PartnerResponseDTO responseDTO = new PartnerResponseDTO(partner.get().getId(), partner.get().getName());
+
+            return responseDTO;
+        }
+
+        return null;
+
+    }
 
     public List<PartnerResponseDTO> listAllPartners() {
 
