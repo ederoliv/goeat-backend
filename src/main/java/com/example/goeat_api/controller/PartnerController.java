@@ -60,7 +60,7 @@ public class PartnerController {
         }
     }
 
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<?> registerPartner(@RequestBody Partner partner){
 
         try{
