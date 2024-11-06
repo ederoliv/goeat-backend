@@ -5,9 +5,12 @@ import com.example.goeat_api.DTO.Order.OrderResponseDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginRequestDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginResponseDTO;
 import com.example.goeat_api.DTO.partner.PartnerResponseDTO;
+import com.example.goeat_api.DTO.product.ProductResponseDTO;
 import com.example.goeat_api.entities.Partner;
+import com.example.goeat_api.entities.Product;
 import com.example.goeat_api.service.OrderService;
 import com.example.goeat_api.service.PartnerService;
+import com.example.goeat_api.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,8 @@ public class PartnerController {
 
     private final PartnerService partnerService;
 
+    private final ProductService productService;
+
     private final OrderService orderService;
 
 
@@ -42,6 +47,13 @@ public class PartnerController {
     public ResponseEntity<List<PartnerResponseDTO>> getAllPartners() {
 
         return ResponseEntity.ok(partnerService.listAllPartners());
+
+    }
+
+    @GetMapping("{id}/products")
+    public ResponseEntity<?> getAllProductsByPartnerId(@PathVariable UUID id) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(productService.listAllProductsByMenuId(id));
 
     }
 
