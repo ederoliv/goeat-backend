@@ -1,6 +1,7 @@
 package com.example.goeat_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,12 @@ public class Product {
     private int price;
 
     private String imageUrl;
+
+    //muitos produtos podem pertencer a uma mesma category
+    @ManyToOne
+    @JoinColumn(name = "category")
+    @JsonManagedReference
+    private Category category;
 
     //muitos produtos podem pertencer a um mesmo menu
     @ManyToOne

@@ -1,5 +1,6 @@
 package com.example.goeat_api.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -33,5 +34,10 @@ public class Menu {
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Product> products;
+
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Category> categories;
+
 
 }
