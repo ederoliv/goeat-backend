@@ -8,6 +8,10 @@ import com.example.goeat_api.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -22,6 +26,10 @@ public class CategoryService {
         Category category = new Category(categoryResquestDTO.name(), menu);
         Category savedCategory = categoryRepository.save(category);
         return convertToCategoryRequestDTO(savedCategory);
+    }
+
+    public Optional<List<Category>> listAllCategoriesByMenuId(UUID menuId) {
+        return categoryRepository.findAllCategoriesByMenuId(menuId);
     }
 
     public CategoryRequestDTO convertToCategoryRequestDTO(Category category) {

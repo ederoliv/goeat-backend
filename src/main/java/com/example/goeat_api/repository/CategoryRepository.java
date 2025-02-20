@@ -13,5 +13,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByName(String name);
     Optional<List<Category>> findAllByMenuId(UUID menuId);
+    Optional<List<Category>> findAllCategoriesByMenuId(UUID menuId);
 
 }

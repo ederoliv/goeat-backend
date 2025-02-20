@@ -24,7 +24,7 @@ public class Category {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "menu_id")
+    @JoinColumn(name = "menuId")
     @JsonBackReference
     private Menu menu;
 

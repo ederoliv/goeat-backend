@@ -7,12 +7,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
+
+    @GetMapping("/{menuId}")
+    public ResponseEntity<?> listAllCategoriesByMenuId(@PathVariable UUID menuId) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.listAllCategoriesByMenuId(menuId));
+    }
 
     @PostMapping
     public ResponseEntity<?> registerCategory(@RequestBody CategoryRequestDTO categoryRequestDTO) {
