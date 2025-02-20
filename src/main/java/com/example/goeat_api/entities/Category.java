@@ -1,5 +1,6 @@
 package com.example.goeat_api.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class Category {
 
     @ManyToOne
     @JoinColumn(name = "menu_id")
-    @JsonManagedReference
+    @JsonBackReference
     private Menu menu;
 
     //uma categoria pode conter muitos produtos
@@ -33,5 +34,9 @@ public class Category {
     private List<Product> products;
 
 
+    public Category(String name, Menu menu) {
+        this.name = name;
+        this.menu = menu;
+    }
 
 }
