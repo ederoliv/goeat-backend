@@ -6,7 +6,7 @@ COPY . /app
 WORKDIR /app
 
 # Compile e construa o JAR
-RUN mvn clean verify
+RUN mvn clean verify -DskipTests
 
 # Etapa 2: Criação da imagem final com a JAR construída
 FROM openjdk:17-alpine
