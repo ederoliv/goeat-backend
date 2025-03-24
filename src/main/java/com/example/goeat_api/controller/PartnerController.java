@@ -14,6 +14,7 @@ import com.example.goeat_api.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,15 +73,17 @@ public class PartnerController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> registerPartner(@RequestBody Partner partner){
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> registerPartner(@RequestBody String partner){
 
         try{
-            Partner savedPartner = partnerService.registerPartner(partner);
-            return ResponseEntity.ok(savedPartner);
+           // Partner savedPartner = partnerService.registerPartner(partner);
+          //  return ResponseEntity.ok(savedPartner);
+            return ResponseEntity.ok(partner);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+
     }
 
     @PostMapping("/{id}/orders")
