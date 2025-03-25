@@ -1,6 +1,7 @@
 package com.example.goeat_api.service;
 
 import com.example.goeat_api.DTO.partner.PartnerLoginRequestDTO;
+import com.example.goeat_api.DTO.partner.PartnerRequestDTO;
 import com.example.goeat_api.DTO.partner.PartnerResponseDTO;
 import com.example.goeat_api.entities.Partner;
 import com.example.goeat_api.repository.PartnerRepository;
@@ -53,7 +54,10 @@ public class PartnerService {
         }
     }
 
-    public Partner registerPartner(Partner partner){
+    public PartnerResponseDTO registerPartner(PartnerRequestDTO partnerRequestDTO){
+
+        var partner = requestDTOToPartner(partnerRequestDTO);
+
         Optional<Partner> existingEmail = partnerRepository.findByEmail(partner.getEmail());
         Optional<Partner> existingCnpj = partnerRepository.findByCnpj(partner.getCnpj());
 
@@ -63,7 +67,7 @@ public class PartnerService {
         if (existingCnpj.isPresent()){
             throw new IllegalArgumentException("Cnpj já está cadastrado");
         }
-        return partnerRepository.save(partner);
+        return partnerToResponseDTO(partnerRepository.save(partner));
     }
 
     public String getPartnerName(String email){
@@ -76,5 +80,20 @@ public class PartnerService {
         Optional<Partner> partner = partnerRepository.findByEmail(email);
 
         return partner.get().getId().toString();
+    }
+
+    private PartnerResponseDTO partnerToResponseDTO(Partner partner){
+        return new PartnerResponseDTO(partner.getId(), partner.getName());
+    }
+
+    private Partner requestDTOToPartner(PartnerRequestDTO requestDTO){
+       Partner partner = new Partner();
+       partner.setEmail(requestDTO.email());
+       partner.setCnpj(requestDTO.cnpj());
+       partner.setName(requestDTO.name());
+       partner.setPhone(requestDTO.phone());
+       partner.setPassword(requestDTO.password());
+
+         return partner;
     }
 }

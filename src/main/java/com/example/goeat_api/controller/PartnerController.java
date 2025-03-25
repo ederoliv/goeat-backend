@@ -4,6 +4,7 @@ import com.example.goeat_api.DTO.Order.OrderDTO;
 import com.example.goeat_api.DTO.Order.OrderResponseDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginRequestDTO;
 import com.example.goeat_api.DTO.partner.PartnerLoginResponseDTO;
+import com.example.goeat_api.DTO.partner.PartnerRequestDTO;
 import com.example.goeat_api.DTO.partner.PartnerResponseDTO;
 import com.example.goeat_api.DTO.product.ProductResponseDTO;
 import com.example.goeat_api.entities.Partner;
@@ -73,13 +74,12 @@ public class PartnerController {
         }
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> registerPartner(@RequestBody String partner){
+    @PostMapping
+    public ResponseEntity<?> registerPartner(@RequestBody PartnerRequestDTO request){
 
         try{
-           // Partner savedPartner = partnerService.registerPartner(partner);
-          //  return ResponseEntity.ok(savedPartner);
-            return ResponseEntity.ok(partner);
+           PartnerResponseDTO savedPartner = partnerService.registerPartner(request);
+           return ResponseEntity.ok(savedPartner);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
