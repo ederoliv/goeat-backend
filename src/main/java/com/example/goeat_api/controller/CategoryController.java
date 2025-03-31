@@ -1,8 +1,12 @@
 package com.example.goeat_api.controller;
 
 import com.example.goeat_api.DTO.category.CategoryRequestDTO;
+import com.example.goeat_api.DTO.category.CategoryResponseDTO;
 import com.example.goeat_api.service.CategoryService;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.grammars.hql.HqlParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,35 +15,50 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/categories")
+@RequestMapping("api/v1/menus/{menuId}/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/{menuId}")
+    @GetMapping
     public ResponseEntity<?> listAllCategoriesByMenuId(@PathVariable UUID menuId) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.listAllCategoriesByMenuId(menuId));
     }
 
+
     @PostMapping
-    public ResponseEntity<?> registerCategory(@RequestBody CategoryRequestDTO categoryRequestDTO) {
+    public ResponseEntity<?> registerCategory(
+            @PathVariable UUID menuId,
+            @RequestBody CategoryRequestDTO request) {
+
         try {
-            // Verifica se o DTO é válido
-            if (categoryRequestDTO.menuId() == null || categoryRequestDTO.name() == null || categoryRequestDTO.name().isEmpty()) {
-                return ResponseEntity.badRequest().body("menuId e name são obrigatórios.");
-            }
+            categoryService.registerCategory(menuId, request);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
 
-            // Registra a categoria usando o serviço
-            CategoryRequestDTO createdCategory = categoryService.registerCategory(categoryRequestDTO);
-
-            // Retorna a resposta com status 201 Created e o DTO da categoria criada
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
-            // Retorna erro 400 Bad Request com a mensagem de exceção
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage()); // Ou .body(e.getMessage()) se quiser detalhes
         } catch (Exception e) {
-            // Retorna erro 500 Internal Server Error para exceções inesperadas
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao processar a requisição.");
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<?> deleteCategory(
+            @PathVariable UUID menuId,
+            @PathVariable Long categoryId) {
+
+        try {
+            categoryService.deleteCategory(menuId, categoryId);
+            return ResponseEntity.noContent().build();
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.unprocessableEntity().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 }
