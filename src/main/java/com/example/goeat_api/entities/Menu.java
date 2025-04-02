@@ -1,8 +1,6 @@
 package com.example.goeat_api.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,12 +30,10 @@ public class Menu {
 
     //um unico menu pode conter muitos produtos
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore // Evita serialização circular
     private List<Product> products;
 
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore // Evita serialização circular
     private List<Category> categories;
-
-
 }

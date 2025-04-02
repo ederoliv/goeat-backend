@@ -14,8 +14,6 @@ public class MenuService {
     public final MenuRepository menuRepository;
 
     public Menu findById(UUID id) {
-
-
         return  menuRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
     }

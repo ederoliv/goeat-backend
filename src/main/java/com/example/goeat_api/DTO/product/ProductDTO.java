@@ -7,5 +7,6 @@ public record ProductDTO(
         String description,
         int price,
         String imageUrl,
-        UUID menuId
+        UUID menuId,
+        Long categoryId
 ) {}

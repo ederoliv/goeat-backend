@@ -1,12 +1,10 @@
 package com.example.goeat_api.service;
 
 import com.example.goeat_api.DTO.category.CategoryRequestDTO;
-import com.example.goeat_api.DTO.category.CategoryResponseDTO;
 import com.example.goeat_api.entities.Category;
 import com.example.goeat_api.entities.Menu;
 import com.example.goeat_api.repository.CategoryRepository;
 import com.example.goeat_api.repository.MenuRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,44 +19,76 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final MenuRepository menuRepository;
 
-    public CategoryResponseDTO registerCategory(UUID menuId, CategoryRequestDTO request) {
-        // Valida existência do menu
-        Menu menu = menuRepository.findById(menuId)
-                .orElseThrow(() -> new EntityNotFoundException("Menu não encontrado"));
-
-        // Cria a nova categoria associada ao menu
-        Category newCategory = new Category();
-        newCategory.setName(request.name());
-        newCategory.setMenu(menu); // Associa ao menu do path
-
-        Category savedCategory = categoryRepository.save(newCategory);
-
-        return new CategoryResponseDTO(
-                savedCategory.getId(),
-                savedCategory.getName(),
-                savedCategory.getMenu().getId() // Retorna o menuId para confirmação
-        );
+    public Category findById(Long id) {
+        return categoryRepository.findById(id).orElse(null);
     }
 
-    public void deleteCategory(UUID menuId, Long categoryId) {
-        // 1. Verifica se o menu existe
-        if (!menuRepository.existsById(menuId)) {
-            throw new EntityNotFoundException("Menu não encontrado com ID: " + menuId);
-        }
-
-        // 2. Busca a categoria e verifica se pertence ao menu
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada com ID: " + categoryId));
-
-        if (!category.getMenu().getId().equals(menuId)) {
-            throw new IllegalArgumentException("Categoria não pertence ao menu especificado");
-        }
-
-        // 4. Deleta a categoria
-        categoryRepository.delete(category);
+    public List<Category> findAllByMenuId(UUID menuId) {
+        Optional<List<Category>> categories = categoryRepository.findAllByMenuId(menuId);
+        return categories.orElse(List.of());
     }
 
-    public Optional<List<Category>> listAllCategoriesByMenuId(UUID menuId) {
-        return categoryRepository.findAllCategoriesByMenuId(menuId);
+    public List<Category> listAllCategoriesByMenuId(UUID menuId) {
+        Optional<List<Category>> categories = categoryRepository.findAllCategoriesByMenuId(menuId);
+        return categories.orElse(List.of());
+    }
+
+    public Category createCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    public Category registerCategory(UUID menuId, CategoryRequestDTO categoryRequestDTO) {
+        Optional<Menu> menuOpt = menuRepository.findById(menuId);
+
+        if (menuOpt.isPresent()) {
+            Menu menu = menuOpt.get();
+
+            Category category = new Category();
+            category.setName(categoryRequestDTO.name());
+            category.setMenu(menu);
+
+            return categoryRepository.save(category);
+        }
+
+        return null;
+    }
+
+    public Category updateCategory(Long id, Category updatedCategory) {
+        Optional<Category> existingCategory = categoryRepository.findById(id);
+
+        if (existingCategory.isPresent()) {
+            Category category = existingCategory.get();
+            category.setName(updatedCategory.getName());
+            return categoryRepository.save(category);
+        }
+
+        return null;
+    }
+
+    public boolean deleteCategory(Long id) {
+        Optional<Category> category = categoryRepository.findById(id);
+
+        if (category.isPresent()) {
+            categoryRepository.delete(category.get());
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean deleteCategory(UUID menuId, Long categoryId) {
+        Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
+
+        if (categoryOpt.isPresent()) {
+            Category category = categoryOpt.get();
+
+            // Verificar se a categoria pertence ao menu especificado
+            if (category.getMenu() != null && category.getMenu().getId().equals(menuId)) {
+                categoryRepository.delete(category);
+                return true;
+            }
+        }
+
+        return false;
     }
 }
